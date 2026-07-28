@@ -21,6 +21,10 @@ async function loginAs(username) {
 async function logout() {
   await page.locator('[data-title="退出登录"]').click();
   await page.waitForFunction(() => location.pathname === '/login');
+  await page.locator('.login-container').waitFor();
+  await page.locator('.ds-dashboard').waitFor({ state: 'detached' });
+  assert.equal(await page.locator('.ds-dashboard').count(), 0);
+  assert.equal(await page.locator('.login-container').count(), 1);
 }
 
 try {

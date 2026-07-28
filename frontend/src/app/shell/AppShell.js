@@ -32,8 +32,10 @@ export const AppShell = defineComponent({
 
     const navigate = path => router.push(path);
     const handleLogout = async () => {
+      // Navigate while the current auth context is still valid; the auth guard
+      // will not start a competing redirect when the session is cleared.
+      await router.replace('/login');
       await auth.logout();
-      router.replace('/login');
     };
 
     const handleProfileClick = () => {

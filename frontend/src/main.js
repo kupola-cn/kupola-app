@@ -7,7 +7,7 @@ import { createKupolaIconProvider, setupUi } from '@kupola/components/ui';
 import './styles/main.css';
 
 import routes from './app/routes.js';
-import { AppShell } from './app/shell/AppShell.js';
+import { AppRoot } from './app/AppRoot.js';
 import { authProvider } from './features/auth/authProvider.js';
 import { AUTH_EXPIRED_EVENT } from './api/client.js';
 
@@ -27,7 +27,7 @@ if (typeof window !== 'undefined') {
     void authProvider.logout();
   });
 }
-const app = createApp(AppShell)
+const app = createApp(AppRoot)
   .use(createAuthPlugin(authProvider))
   .use(createRouterPlugin(router, {
     auth: authProvider,
