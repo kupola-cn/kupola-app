@@ -1,94 +1,94 @@
-[English](./README.en.md) | 中文
+[中文](./README.zh-CN.md) | English
 
 # Kupola App
 
-[Kupola](https://github.com/kupola-cn/kupola) 管理后台示例项目，包含前端应用和基于 PostgreSQL 的 Go 后端。
+[Kupola](https://github.com/kupola-cn/kupola) administration console example with a frontend application and an optional Go backend backed by PostgreSQL.
 
-本项目用于展示如何使用 Kupola 的运行时、路由、认证和组件包构建实际管理后台。前端默认提供 Mock 模式，也可以按需切换到 Go + PostgreSQL 后端。
+This project demonstrates how to build a practical administration console with Kupola's runtime, router, authentication, and component packages. The frontend defaults to Mock mode and can be switched to the Go + PostgreSQL backend when needed.
 
-## 项目结构
+## Project Structure
 
 ```text
 kupola-app/
-├── frontend/              # Kupola + Vite 前端
-├── backend/               # Gin + GORM 后端
-│   ├── config/             # 配置加载
-│   ├── database/           # 数据库连接、迁移和种子数据
-│   ├── middleware/         # 认证和请求日志
-│   ├── models/             # GORM 模型
-│   ├── routes/              # API 路由和处理器
-│   ├── scripts/setup-dev.ps1  # Windows 初始化脚本
-│   ├── scripts/setup-dev.sh   # Linux/macOS 初始化脚本
+├── frontend/              # Kupola + Vite frontend
+├── backend/               # Gin + GORM backend
+│   ├── config/             # Configuration loading
+│   ├── database/           # Database connection, migrations, and seed data
+│   ├── middleware/         # Authentication and request logging
+│   ├── models/             # GORM models
+│   ├── routes/             # API routes and handlers
+│   ├── scripts/setup-dev.ps1  # Windows initialization script
+│   ├── scripts/setup-dev.sh   # Linux/macOS initialization script
 │   ├── config.example.yaml
 │   └── main.go
 └── README.md
 ```
 
-## 运行模式
+## Run Modes
 
-本项目默认使用 **Mock 模式**。使用者只需要安装 Node.js，即可直接运行前端，不需要安装 Go、PostgreSQL，也不需要启动后端：
+This project defaults to **Mock mode**. You only need Node.js to run the frontend; Go, PostgreSQL, and the backend are not required:
 
-```powershell
+```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-Mock 模式适合快速体验页面、权限交互和前端业务流程。Mock 数据保存在浏览器内存中，刷新页面后恢复初始数据。
+Mock mode is suitable for quickly exploring the pages, permission interactions, and frontend workflows. Mock data is kept in browser memory and returns to its initial state after a page refresh.
 
-**HTTP + PostgreSQL 模式是可选项**，仅用于真实后端联调、数据库验证和接口开发。启用方式见下方“后端初始化”和“真实后端联调”。
+**HTTP + PostgreSQL mode is optional** and is intended for real backend integration, database verification, and API development. See the backend setup and backend integration sections below.
 
-## 环境要求
+## Requirements
 
 - Node.js 20+
 
-只有使用 HTTP + PostgreSQL 模式时才需要额外安装：
+The following are only required for HTTP + PostgreSQL mode:
 
 - Go 1.22+
 - PostgreSQL 14+
-- PostgreSQL 服务运行在本机 `127.0.0.1:5432`
+- PostgreSQL running locally at `127.0.0.1:5432`
 
-默认数据库配置为：用户 `postgres`，密码 `123456`，数据库 `kupola_app`。可以通过 `KUPOLA_*` 环境变量覆盖，不要在生产环境使用这些默认值。
+The default database configuration is user `postgres`, password `123456`, and database `kupola_app`. You can override these values with `KUPOLA_*` environment variables. Do not use these defaults in production.
 
-## 后端初始化（可选）
+## Optional Backend Setup
 
-Windows PowerShell：
+Windows PowerShell:
 
 ```powershell
 cd backend
 .\scripts\setup-dev.ps1
 ```
 
-Linux/macOS：
+Linux/macOS:
 
 ```bash
 cd backend
 bash ./scripts/setup-dev.sh
 ```
 
-两套脚本都会创建 `kupola_app` 数据库，然后执行 GORM 迁移和初始种子数据。数据库结构和测试数据的唯一来源是后端代码中的 `migrate`、`seed` 命令，避免手写 SQL 与模型定义不一致。
+Both scripts create the `kupola_app` database and run the GORM migrations and initial seed data. The backend `migrate` and `seed` commands are the single source of truth for the database schema and test data, avoiding drift between hand-written SQL and model definitions.
 
-当前初始化范围仅包含用户模块：创建 `users` 表，并写入 12 条业务用户和 4 条系统登录账号。组织机构、角色、权限点、菜单、字典、操作日志、登录日志和通知消息目前仍使用前端 Mock 数据，尚未创建对应的后端数据表。
+The current initialization scope only includes the user module: it creates the `users` table and inserts 12 business users and 4 system login accounts. Organizations, roles, permissions, menus, dictionaries, operation logs, login logs, and notifications still use frontend Mock data and do not have backend tables yet.
 
-也可以手动执行：
+You can also run the commands manually:
 
-```powershell
+```bash
 cd backend
-$env:KUPOLA_DATABASE_PASSWORD = '123456'
+export KUPOLA_DATABASE_PASSWORD=123456
 createdb -h 127.0.0.1 -p 5432 -U postgres kupola_app
 go run . migrate
 go run . seed
 ```
 
-数据库已存在时，跳过 `createdb` 即可。启动命令：
+Skip `createdb` when the database already exists. Start the backend with:
 
-```powershell
+```bash
 go run . server
 ```
 
-后端地址：`http://127.0.0.1:8080`，健康检查：`http://127.0.0.1:8080/health`。
+The backend is available at `http://127.0.0.1:8080`, with a health check at `http://127.0.0.1:8080/health`.
 
-可用的后端命令：
+Available backend commands:
 
 ```text
 go run . server    start HTTP server
@@ -96,32 +96,32 @@ go run . migrate   run database migrations
 go run . seed      seed initial users
 ```
 
-## 前端启动
+## Start the Frontend
 
-```powershell
+```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-前端默认使用 Mock 模式，不依赖 PostgreSQL 或后端服务。前端地址：`http://127.0.0.1:5173`。
+The frontend defaults to Mock mode and does not depend on PostgreSQL or the backend. It is available at `http://127.0.0.1:5173`.
 
-默认 Mock 账号：`admin/newpass123`，其他测试账号密码为 `123456`。Mock 用户数据和用户 CRUD 只保存在当前浏览器进程内，刷新页面会恢复初始数据。
+Default Mock credentials are `admin/newpass123`; the other test accounts use password `123456`. Mock users and user CRUD data are kept in the current browser process and return to their initial state after a refresh.
 
-## 真实后端联调（可选）
+## Backend Integration
 
-先按上面的“后端初始化”完成数据库和后端启动，再在启动 Vite 前设置：
+Complete the optional backend setup and start the backend first. Then set the API mode before starting Vite:
 
 ```powershell
 $env:VITE_API_MODE = 'http'
 npm run dev
 ```
 
-HTTP 模式会通过 Vite 代理把 `/api` 请求发送到后端 `8080` 端口。
+In HTTP mode, the Vite proxy forwards `/api` requests to the backend on port `8080`.
 
-## 配置
+## Configuration
 
-可以复制 `backend/config.example.yaml` 为 `backend/config.yaml` 后按本机环境修改，也可以使用环境变量：
+Copy `backend/config.example.yaml` to `backend/config.yaml` and adjust it for your environment, or use environment variables:
 
 ```powershell
 $env:KUPOLA_DATABASE_PASSWORD = '123456'
@@ -129,30 +129,30 @@ $env:KUPOLA_JWT_SECRET = 'replace-with-a-secret-at-least-32-characters'
 go run . server
 ```
 
-生产环境必须替换数据库密码和 JWT 密钥。
+Replace the database password and JWT secret in production.
 
-## 初始账号
+## Initial Accounts
 
-新数据库执行 `seed` 后的初始密码如下：
+After running `seed` on a new database, the initial passwords are:
 
-| 用户名 | 角色 |
+| Username | Role |
 | --- | --- |
-| admin | 管理员，`newpass123` |
-| operator | 运营管理员，`123456` |
-| viewer | 只读成员，`123456` |
-| auditor | 审计员，`123456` |
+| admin | Administrator, `newpass123` |
+| operator | Operations administrator, `123456` |
+| viewer | Read-only member, `123456` |
+| auditor | Auditor, `123456` |
 
-## 验证
+## Verification
 
-```powershell
+```bash
 cd backend
 go test ./...
 go vet ./...
 
-cd ..\frontend
+cd ../frontend
 npm run build
-$env:KUPOLA_TEST_PASSWORD = 'newpass123'
+export KUPOLA_TEST_PASSWORD=newpass123
 npm run test:e2e
 ```
 
-如管理员密码被修改过，可通过 `KUPOLA_TEST_PASSWORD` 指定当前密码。
+Set `KUPOLA_TEST_PASSWORD` to the current password if the administrator password has been changed.

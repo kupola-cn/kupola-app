@@ -9,15 +9,16 @@
     "test:e2e": "node tests/smoke.mjs"
   },
   "dependencies": {
-    "@kupola/auth": "^3.3.1",
-    "@kupola/components": "^3.3.1",
-    "@kupola/core": "^3.3.1",
-    "@kupola/platform": "^3.3.1",
-    "@kupola/router": "^3.3.1",
+    "@kupola/auth": "^3.3.7",
+    "@kupola/components": "^3.3.7",
+    "@kupola/core": "^3.3.7",
+    "@kupola/platform": "^3.3.7",
+    "@kupola/router": "^3.3.7",
     "axios": "^1.18.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "playwright": "^1.62.0",
     "vite": "^6.0.0"
   }
 }

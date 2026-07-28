@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
-import { chromium } from '../../../kupola-u/node_modules/playwright/index.mjs';
+import { chromium } from 'playwright';
 
 const baseUrl = process.env.KUPOLA_APP_URL || 'http://localhost:5173';
 const adminTestPassword = process.env.KUPOLA_TEST_PASSWORD || 'newpass123';
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage();
-page.on('pageerror', error => console.error(error));
+const pageErrors = [];
+page.on('pageerror', error => pageErrors.push(error));
 page.on('console', message => {
   if (message.type() === 'error') {console.error(message.text());}
 });
@@ -30,6 +31,7 @@ try {
 
   await page.locator('[data-title="当前用户资料"]').click();
   await page.locator('.account-view').waitFor();
+  await page.locator('.account-password-form input[name="currentPassword"]').waitFor();
   assert.equal(await page.locator('.account-view').getByText('星河集团').count(), 1);
   assert.equal(await page.locator('.account-view').getByText('超级管理员').count(), 1);
   await page.locator('.account-password-form input[name="currentPassword"]').fill('wrong');
@@ -267,6 +269,7 @@ try {
   const themeBefore = await page.locator('html').getAttribute('data-theme');
   await page.locator('[data-title="切换主题"]').click();
   await page.waitForFunction(previous => document.documentElement.dataset.theme !== previous, themeBefore);
+  assert.equal(pageErrors.length, 0, pageErrors.map(error => error.stack || error.message).join('\n'));
 } finally {
   await browser.close();
 }
