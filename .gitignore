@@ -1,0 +1,5 @@
+backend/*.exe
+backend/*.exe~
+backend/config.yaml
+frontend/node_modules/
+frontend/dist/
