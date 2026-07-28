@@ -1,6 +1,10 @@
+[English](./README.en.md) | 中文
+
 # Kupola App
 
-Kupola 管理后台示例项目，包含前端应用和基于 PostgreSQL 的 Go 后端。
+[Kupola](https://github.com/kupola-cn/kupola) 管理后台示例项目，包含前端应用和基于 PostgreSQL 的 Go 后端。
+
+本项目用于展示如何使用 Kupola 的运行时、路由、认证和组件包构建实际管理后台。前端默认提供 Mock 模式，也可以按需切换到 Go + PostgreSQL 后端。
 
 ## 项目结构
 
