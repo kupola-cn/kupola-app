@@ -1,33 +1,58 @@
 import { hasPermission } from '../features/auth/access.js';
+import { protectedRoutes } from './routes.js';
 
-export const SIDEBAR_NAVIGATION = Object.freeze([
-  { path: '/', title: '首页', headerTitle: '仪表盘概览', icon: 'dashboard' },
-  { type: 'divider' },
-  { path: '/users', title: '用户管理', headerTitle: '管理后台', icon: 'user', permission: 'user:list' },
-  { path: '/organizations', title: '机构管理', headerTitle: '组织架构', icon: 'users', permission: 'organization:list' },
-  { path: '/permissions', title: '权限管理', headerTitle: '权限配置', icon: 'shield', permission: 'permission:list' },
-  { path: '/audit', title: '操作日志', headerTitle: '审计日志', icon: 'file-text', permission: 'audit:list' },
-  { path: '/audit/login', title: '登录日志', headerTitle: '登录审计', icon: 'key', permission: 'audit:list' },
-  { path: '/settings', title: '系统设置', headerTitle: '系统设置', icon: 'settings', permission: 'settings:list' },
-  { path: '/notifications', title: '通知消息', headerTitle: '通知消息', icon: 'bell' },
-]);
+function toFullRoutePath(routePath) {
+  const path = String(routePath || '').trim();
+  return path ? `/${path}` : '/';
+}
 
-export function getVisibleNavigationItems(authContext) {
-  const visibleItems = SIDEBAR_NAVIGATION.filter(item => item.type === 'divider'
-    || hasPermission(authContext, item.permission));
+function toNavigationItem(route) {
+  const meta = route.meta || {};
+  return Object.freeze({
+    path: toFullRoutePath(route.path),
+    title: meta.title || route.name,
+    headerTitle: meta.headerTitle || meta.title || route.name,
+    icon: meta.icon,
+    permission: meta.permission,
+    navDividerAfter: Boolean(meta.navDividerAfter),
+  });
+}
 
-  return visibleItems.filter((item, index, items) => {
+function getSidebarNavigationItems() {
+  const items = [];
+  for (const route of protectedRoutes) {
+    if (route.meta?.nav !== 'sidebar') {
+      continue;
+    }
+
+    const item = toNavigationItem(route);
+    items.push(item);
+    if (item.navDividerAfter) {
+      items.push(Object.freeze({ type: 'divider' }));
+    }
+  }
+  return items;
+}
+
+function pruneDividers(items) {
+  return items.filter((item, index, currentItems) => {
     if (item.type !== 'divider') {
       return true;
     }
-    const hasVisibleBefore = items.slice(0, index).some(previous => previous.type !== 'divider');
-    const hasVisibleAfter = items.slice(index + 1).some(next => next.type !== 'divider');
+    const hasVisibleBefore = currentItems.slice(0, index).some(previous => previous.type !== 'divider');
+    const hasVisibleAfter = currentItems.slice(index + 1).some(next => next.type !== 'divider');
     return hasVisibleBefore && hasVisibleAfter;
   });
 }
 
-export function findNavigationItem(path, items = SIDEBAR_NAVIGATION) {
-  return items.find(item => item.path === path)
-    || items.find(item => item.path !== '/' && path.startsWith(`${item.path}/`))
-    || SIDEBAR_NAVIGATION[0];
+export function getVisibleNavigationItems(authContext) {
+  return pruneDividers(getSidebarNavigationItems().filter(item => item.type === 'divider'
+    || hasPermission(authContext, item.permission)));
+}
+
+export function findNavigationItem(path, items = getSidebarNavigationItems()) {
+  const currentPath = String(path || '/');
+  return items.find(item => item.path === currentPath)
+    || items.find(item => item.path !== '/' && currentPath.startsWith(`${item.path}/`))
+    || getSidebarNavigationItems()[0];
 }
