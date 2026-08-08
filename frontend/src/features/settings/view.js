@@ -1,4 +1,5 @@
 import { html } from '@kupola/platform';
+import { computed } from '@kupola/core';
 import { TableView } from '@kupola/components/views';
 import { PERMISSION_GROUPS } from '../permissions/state.js';
 
@@ -134,7 +135,15 @@ function menuTable({ menus, canManage, onEdit, onToggle }) {
   });
 }
 
-function permissionPointTable({ points, canManage, onEdit, onToggle, onDelete }) {
+function permissionPointTable({ points, pageSize, canManage, onEdit, onToggle, onDelete }) {
+  const options = computed(() => ({
+    rowKey: 'id',
+    showPagination: true,
+    pageSize: pageSize.value,
+    pageSizeOptions: [ 10, 30, 50 ],
+    emptyText: '没有匹配权限点',
+  }));
+
   return TableView({
     ariaLabel: '权限点列表',
     className: 'settings-table settings-component-table',
@@ -169,7 +178,7 @@ function permissionPointTable({ points, canManage, onEdit, onToggle, onDelete })
       },
     ],
     data: points,
-    options: { rowKey: 'id', showPagination: true, pageSize: 10, pageSizeOptions: [ 10, 30, 50 ], emptyText: '没有匹配权限点' },
+    options,
   });
 }
 
@@ -358,7 +367,7 @@ export function permissionPointView({ points, permissionKeyword, pageSize, canMa
         </div>
       </div>
       <div class="settings-table-wrap">
-        ${permissionPointTable({ points, canManage, onEdit, onToggle, onDelete })}
+        ${permissionPointTable({ points, pageSize, canManage, onEdit, onToggle, onDelete })}
       </div>
     </section>
   `;

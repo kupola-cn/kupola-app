@@ -274,12 +274,6 @@ export default function SettingsListPage() {
 
   function handlePermissionPageSize(size) {
     permissionPageSize.value = size;
-    const pageSizeSelect = document.querySelector('.settings-panel--permission .ds-table-page-size');
-    if (!pageSizeSelect || pageSizeSelect.value === String(size)) {
-      return;
-    }
-    pageSizeSelect.value = String(size);
-    pageSizeSelect.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
   const header = settingsHeaderView({

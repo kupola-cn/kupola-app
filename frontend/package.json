@@ -9,11 +9,11 @@
     "test:e2e": "node tests/smoke.mjs"
   },
   "dependencies": {
-    "@kupola/auth": "^3.3.7",
-    "@kupola/components": "^3.3.7",
-    "@kupola/core": "^3.3.7",
-    "@kupola/platform": "^3.3.7",
-    "@kupola/router": "^3.3.7",
+    "@kupola/auth": "^3.4.0",
+    "@kupola/components": "^3.4.0",
+    "@kupola/core": "^3.4.0",
+    "@kupola/platform": "^3.4.0",
+    "@kupola/router": "^3.4.0",
     "axios": "^1.18.1",
     "zod": "^4.4.3"
   },

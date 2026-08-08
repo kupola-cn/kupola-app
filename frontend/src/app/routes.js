@@ -13,16 +13,56 @@ const NotificationListPage = lazyComponent(() => import('../features/notificatio
 const NotFoundPage = lazyComponent(() => import('../features/status/pages/NotFoundPage.js'), 'NotFoundPage');
 const ForbiddenPage = lazyComponent(() => import('../features/status/pages/ForbiddenPage.js'), 'ForbiddenPage');
 
-const protectedRoutes = [
-  { path: '', name: 'dashboard', component: DashboardPage, meta: { title: '仪表盘', icon: 'dashboard' } },
-  { path: 'users', name: 'user-list', component: UserListPage, meta: { permission: 'user:list', title: '用户管理', icon: 'user' } },
+export const protectedRoutes = [
+  {
+    path: '',
+    name: 'dashboard',
+    component: DashboardPage,
+    meta: { title: '仪表盘', headerTitle: '仪表盘概览', icon: 'dashboard', nav: 'sidebar', navDividerAfter: true },
+  },
+  {
+    path: 'users',
+    name: 'user-list',
+    component: UserListPage,
+    meta: { permission: 'user:list', title: '用户管理', headerTitle: '管理后台', icon: 'user', nav: 'sidebar' },
+  },
   { path: 'users/:id', name: 'user-detail', component: UserDetailPage, meta: { permission: 'user:view', title: '用户详情', icon: 'user-circle' } },
-  { path: 'organizations', name: 'organization-list', component: OrganizationListPage, meta: { permission: 'organization:list', title: '机构管理', icon: 'users' } },
-  { path: 'permissions', name: 'permission-list', component: PermissionListPage, meta: { permission: 'permission:list', title: '权限管理', icon: 'shield' } },
-  { path: 'audit', name: 'audit-log', component: AuditLogPage, meta: { permission: 'audit:list', title: '操作日志', icon: 'file-text' } },
-  { path: 'audit/login', name: 'audit-login-log', component: LoginLogPage, meta: { permission: 'audit:list', title: '登录日志', icon: 'key' } },
-  { path: 'settings', name: 'settings', component: SettingsPage, meta: { permission: 'settings:list', title: '系统设置', icon: 'settings' } },
-  { path: 'notifications', name: 'notifications', component: NotificationListPage, meta: { title: '通知消息', icon: 'bell' } },
+  {
+    path: 'organizations',
+    name: 'organization-list',
+    component: OrganizationListPage,
+    meta: { permission: 'organization:list', title: '机构管理', headerTitle: '组织架构', icon: 'users', nav: 'sidebar' },
+  },
+  {
+    path: 'permissions',
+    name: 'permission-list',
+    component: PermissionListPage,
+    meta: { permission: 'permission:list', title: '权限管理', headerTitle: '权限配置', icon: 'shield', nav: 'sidebar' },
+  },
+  {
+    path: 'audit',
+    name: 'audit-log',
+    component: AuditLogPage,
+    meta: { permission: 'audit:list', title: '操作日志', headerTitle: '审计日志', icon: 'file-text', nav: 'sidebar' },
+  },
+  {
+    path: 'audit/login',
+    name: 'audit-login-log',
+    component: LoginLogPage,
+    meta: { permission: 'audit:list', title: '登录日志', headerTitle: '登录审计', icon: 'key', nav: 'sidebar' },
+  },
+  {
+    path: 'settings',
+    name: 'settings',
+    component: SettingsPage,
+    meta: { permission: 'settings:list', title: '系统设置', headerTitle: '系统设置', icon: 'settings', nav: 'sidebar' },
+  },
+  {
+    path: 'notifications',
+    name: 'notifications',
+    component: NotificationListPage,
+    meta: { title: '通知消息', headerTitle: '通知消息', icon: 'bell', nav: 'sidebar' },
+  },
   { path: '403', name: 'forbidden', component: ForbiddenPage },
   { path: '*', name: 'not-found', component: NotFoundPage },
 ];

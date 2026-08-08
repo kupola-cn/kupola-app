@@ -111,7 +111,7 @@ export function appShellView({
         <div class="ds-dashboard__footer-left">
           <div class="ds-dashboard__status-item">
             <span class="ds-dashboard__status-dot"></span>
-            <span>Kupola v3.3.1</span>
+            <span>Kupola v3.4.0</span>
           </div>
         </div>
       </footer>
